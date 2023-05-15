@@ -129,7 +129,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\kg\opengl-tutorials\YoutubeOpenGL 12 - Mesh Class</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\kg\kg\YoutubeOpenGL 12 - Mesh Class</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

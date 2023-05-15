@@ -5,6 +5,10 @@ namespace fs = std::filesystem;
 
 #include"Mesh.h"
 #include <json/Model.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/intersect.hpp>
+
 
 
 
@@ -16,10 +20,10 @@ const unsigned int height = 800;
 // Vertices coordinates
 Vertex vertices[] =
 { //               COORDINATES           /            COLORS          /           NORMALS         /       TEXTURE COORDINATES    //
-	Vertex{glm::vec3(-1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
-	Vertex{glm::vec3(-1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
-	Vertex{glm::vec3( 1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
-	Vertex{glm::vec3( 1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 0.0f)}
+	Vertex{glm::vec3(-2.0f, 0.0f,  2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
+	Vertex{glm::vec3(-2.0f, 0.0f, -2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
+	Vertex{glm::vec3( 2.0f, 0.0f, -2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
+	Vertex{glm::vec3( 2.0f, 0.0f,  2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 0.0f)}
 };
 
 // Indices for vertices order
@@ -56,6 +60,10 @@ GLuint lightIndices[] =
 	4, 5, 6,
 	4, 6, 7
 };
+
+// Creates camera object
+Camera camera(width, height, glm::vec3(0.0f, 1.0f, 3.0f));
+
 
 
 int main()
@@ -98,10 +106,12 @@ int main()
 	*/
 	std::string parentDir = (fs::current_path().fs::path::parent_path()).string();
 	std::string texPath = "/Resources/YoutubeOpenGL 10 - Specular Maps/";
-	std::string modelPath = "/Resources/YoutubeOpenGL 13 - Model Loading/models/bunny/scene.gltf";
+	std::string modelPathChair = "/Resources/YoutubeOpenGL 13 - Model Loading/models/bunny/outdoor_table_chair_set_01_4k.gltf";
+	std::string modelPathTable = "/Resources/YoutubeOpenGL 13 - Model Loading/models/bunny/wooden_table_02_4k.gltf";
 
 	// Load in a model
-	Model model((parentDir + modelPath).c_str());
+	Model model((parentDir + modelPathChair).c_str());
+	Model modelTable((parentDir + modelPathTable).c_str());
 
 
 	// Texture data
@@ -111,18 +121,11 @@ int main()
 		Texture((parentDir + texPath + "planksSpec.png").c_str(), "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
 	};
 
-	// Original code from the tutorial
-	/*Texture textures[]
-	{
-		Texture("planks.png", "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
-		Texture("planksSpec.png", "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
-	};*/
-
-
 
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("default.vert", "default.frag");
 	Shader shaderProgram2("default.vert", "default.frag");
+	Shader shaderProgram3("default.vert", "default.frag");
 	// Store mesh data in vectors for the mesh
 	std::vector <Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
 	std::vector <GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
@@ -130,7 +133,7 @@ int main()
 	// Create floor mesh
 	Mesh floor(verts, ind, tex);
 
-
+	
 	// Shader for light cube
 	Shader lightShader("light.vert", "light.frag");
 	// Store mesh data in vectors for the mesh
@@ -138,10 +141,6 @@ int main()
 	std::vector <GLuint> lightInd(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
 	// Crate light mesh
 	Mesh light(lightVerts, lightInd, tex);
-
-
-
-
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
@@ -151,11 +150,6 @@ int main()
 	glm::vec3 objectPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::mat4 objectModel = glm::mat4(1.0f);
 	objectModel = glm::translate(objectModel, objectPos);
-	
-	glm::vec3 objectPosModel = glm::vec3(1.0f, 1.0f, 1.0f);
-	glm::mat4 objectModel2 = glm::mat4(1.0f);
-	objectModel2 = glm::translate(objectModel, objectPosModel);
-
 
 	lightShader.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
@@ -163,22 +157,15 @@ int main()
 
 	shaderProgram.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(objectModel));
+	/*glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(objectModel));
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "modelTable"), 1, GL_FALSE, glm::value_ptr(objectModel));*/
 	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
-
-	shaderProgram2.Activate();
-	glUniformMatrix4fv(glGetUniformLocation(shaderProgram2.ID, "model"), 1, GL_FALSE, glm::value_ptr(objectModel2));
-	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
-
-
-	
+	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);	
 
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
-	// Creates camera object
-	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
+
 
 
 	// Main while loop
@@ -196,7 +183,8 @@ int main()
 		camera.updateMatrix(45.0f, 0.1f, 100.0f);
 
 		// Draw a model
-		model.Draw(shaderProgram2, camera);
+		model.Draw(shaderProgram, camera);
+		modelTable.Draw(shaderProgram, camera);
 
 		// Draws different meshes
 		floor.Draw(shaderProgram, camera);
@@ -208,8 +196,6 @@ int main()
 		// Take care of all GLFW events
 		glfwPollEvents();
 	}
-
-
 
 	// Delete all the objects we've created
 	shaderProgram.Delete();
