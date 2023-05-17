@@ -2,7 +2,8 @@
 #define MODEL_CLASS_H
 
 #include<json/json.h>
-#include"Mesh.h"
+#include"Mesh2.h"
+#include <Texture2.h>
 
 using json = nlohmann::json;
 
@@ -22,7 +23,7 @@ private:
 	json JSON;
 
 	// All the meshes and transformations
-	std::vector<Mesh> meshes;
+	std::vector<Mesh2> meshes;
 	std::vector<glm::vec3> translationsMeshes;
 	std::vector<glm::quat> rotationsMeshes;
 	std::vector<glm::vec3> scalesMeshes;
@@ -30,7 +31,7 @@ private:
 
 	// Prevents textures from being loaded twice
 	std::vector<std::string> loadedTexName;
-	std::vector<Texture> loadedTex;
+	std::vector<Texture2> loadedTex;
 
 	// Loads a single mesh by its index
 	void loadMesh(unsigned int indMesh);
@@ -43,7 +44,7 @@ private:
 	// Interprets the binary data into floats, indices, and textures
 	std::vector<float> getFloats(json accessor);
 	std::vector<GLuint> getIndices(json accessor);
-	std::vector<Texture> getTextures();
+	std::vector<Texture2> getTextures();
 
 	// Assembles all the floats into vertices
 	std::vector<Vertex> assembleVertices

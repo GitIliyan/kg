@@ -106,11 +106,11 @@ int main()
 	*/
 	std::string parentDir = (fs::current_path().fs::path::parent_path()).string();
 	std::string texPath = "/Resources/YoutubeOpenGL 10 - Specular Maps/";
-	std::string modelPathChair = "/Resources/YoutubeOpenGL 13 - Model Loading/models/bunny/outdoor_table_chair_set_01_4k.gltf";
+	//std::string modelPathChair = "/Resources/YoutubeOpenGL 13 - Model Loading/models/bunny/outdoor_table_chair_set_01_4k.gltf";
 	std::string modelPathTable = "/Resources/YoutubeOpenGL 13 - Model Loading/models/bunny/wooden_table_02_4k.gltf";
 
 	// Load in a model
-	Model model((parentDir + modelPathChair).c_str());
+	//Model model((parentDir + modelPathChair).c_str());
 	Model modelTable((parentDir + modelPathTable).c_str());
 
 
@@ -118,7 +118,8 @@ int main()
 	Texture textures[]
 	{
 		Texture((parentDir + texPath + "planks.png").c_str(), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
-		Texture((parentDir + texPath + "planksSpec.png").c_str(), "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
+		Texture((parentDir + texPath + "planksSpec.png").c_str(), "specular", 1, GL_RED, GL_UNSIGNED_BYTE),
+	
 	};
 
 
@@ -151,6 +152,9 @@ int main()
 	glm::mat4 objectModel = glm::mat4(1.0f);
 	objectModel = glm::translate(objectModel, objectPos);
 
+	glm::mat4 masaModel = glm::mat4(1.0f);
+	masaModel = glm::translate(masaModel, objectPos);
+
 	lightShader.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
 	glUniform4f(glGetUniformLocation(lightShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
@@ -161,7 +165,12 @@ int main()
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "modelTable"), 1, GL_FALSE, glm::value_ptr(objectModel));*/
 	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);	
-
+	shaderProgram2.Activate();
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram2.ID, "masaModel"), 1, GL_FALSE, glm::value_ptr(masaModel));
+	/*glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(objectModel));
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "modelTable"), 1, GL_FALSE, glm::value_ptr(objectModel));*/
+	glUniform4f(glGetUniformLocation(shaderProgram2.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	glUniform3f(glGetUniformLocation(shaderProgram2.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
@@ -183,8 +192,8 @@ int main()
 		camera.updateMatrix(45.0f, 0.1f, 100.0f);
 
 		// Draw a model
-		model.Draw(shaderProgram, camera);
-		modelTable.Draw(shaderProgram, camera);
+		//model.Draw(shaderProgram, camera);
+		modelTable.Draw(shaderProgram2, camera);
 
 		// Draws different meshes
 		floor.Draw(shaderProgram, camera);

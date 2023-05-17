@@ -54,6 +54,15 @@
     <ClCompile Include="Libraries\include\json\Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Texture2.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EBO.h">
@@ -81,6 +90,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Libraries\include\json\Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

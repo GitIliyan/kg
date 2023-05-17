@@ -1,8 +1,4 @@
 #include"Model.h"
-#include "../../../shaderClass.h"
-#include "../../../Camera.h"
-#include "../../../Mesh.h"
-
 
 Model::Model(const char* file)
 {
@@ -23,7 +19,7 @@ void Model::Draw(Shader& shader, Camera& camera)
 	// Go over all meshes and draw each one
 	for (unsigned int i = 0; i < meshes.size(); i++)
 	{
-		meshes[i].Mesh::Draw(shader, camera, matricesMeshes[i]);
+		meshes[i].Mesh2::Draw(shader, camera, matricesMeshes[i]);
 	}
 }
 
@@ -46,10 +42,10 @@ void Model::loadMesh(unsigned int indMesh)
 	// Combine all the vertex components and also get the indices and textures
 	std::vector<Vertex> vertices = assembleVertices(positions, normals, texUVs);
 	std::vector<GLuint> indices = getIndices(JSON["accessors"][indAccInd]);
-	std::vector<Texture> textures = getTextures();
+	std::vector<Texture2> textures = getTextures();
 
 	// Combine the vertices, indices, and textures into a mesh
-	meshes.push_back(Mesh(vertices, indices, textures));
+	meshes.push_back(Mesh2(vertices, indices, textures));
 }
 
 void Model::traverseNode(unsigned int nextNode, glm::mat4 matrix)
@@ -99,9 +95,9 @@ void Model::traverseNode(unsigned int nextNode, glm::mat4 matrix)
 	}
 
 	// Initialize matrices
-	glm::mat4 trans = glm::mat4(23.5f);
-	glm::mat4 rot = glm::mat4(23.5f);
-	glm::mat4 sca = glm::mat4(23.5f);
+	glm::mat4 trans = glm::mat4(1.0f);
+	glm::mat4 rot = glm::mat4(1.0f);
+	glm::mat4 sca = glm::mat4(1.0f);
 
 	// Use translation, rotation, and scale to change the initialized matrices
 	trans = glm::translate(trans, translation);
@@ -232,9 +228,9 @@ std::vector<GLuint> Model::getIndices(json accessor)
 	return indices;
 }
 
-std::vector<Texture> Model::getTextures()
+std::vector<Texture2> Model::getTextures()
 {
-	std::vector<Texture> textures;
+	std::vector<Texture2> textures;
 
 	std::string fileStr = std::string(file);
 	std::string fileDirectory = fileStr.substr(0, fileStr.find_last_of('/') + 1);
@@ -263,7 +259,7 @@ std::vector<Texture> Model::getTextures()
 			// Load diffuse texture
 			if (texPath.find("baseColor") != std::string::npos)
 			{
-				Texture diffuse = Texture((fileDirectory + texPath).c_str(), "diffuse", loadedTex.size(), NULL, NULL);
+				Texture2 diffuse = Texture2((fileDirectory + texPath).c_str(), "diffuse", loadedTex.size());
 				textures.push_back(diffuse);
 				loadedTex.push_back(diffuse);
 				loadedTexName.push_back(texPath);
@@ -271,7 +267,7 @@ std::vector<Texture> Model::getTextures()
 			// Load specular texture
 			else if (texPath.find("metallicRoughness") != std::string::npos)
 			{
-				Texture specular = Texture((fileDirectory + texPath).c_str(), "specular", loadedTex.size(), NULL, NULL);
+				Texture2 specular = Texture2((fileDirectory + texPath).c_str(), "specular", loadedTex.size());
 				textures.push_back(specular);
 				loadedTex.push_back(specular);
 				loadedTexName.push_back(texPath);
@@ -298,7 +294,7 @@ std::vector<Vertex> Model::assembleVertices
 			{
 				positions[i],
 				normals[i],
-				glm::vec3(22.0f,22.0f, 22.0f),
+				glm::vec3(1.0f, 1.0f, 1.0f),
 				texUVs[i]
 			}
 		);
