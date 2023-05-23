@@ -62,7 +62,9 @@ GLuint lightIndices[] =
 };
 
 // Creates camera object
-Camera camera(width, height, glm::vec3(0.0f, 1.0f, 3.0f));
+Camera camera(width, height, glm::vec3(0.5f, 0.3f, 1.7f));
+
+Camera camera2(width, height, glm::vec3(22.5f, 22.3f, 22.7f));
 
 
 
@@ -108,6 +110,7 @@ int main()
 	std::string texPath = "/Resources/YoutubeOpenGL 10 - Specular Maps/";
 	//std::string modelPathChair = "/Resources/YoutubeOpenGL 13 - Model Loading/models/bunny/outdoor_table_chair_set_01_4k.gltf";
 	std::string modelPathTable = "/Resources/YoutubeOpenGL 13 - Model Loading/models/bunny/wooden_table_02_4k.gltf";
+	std::string modelPathChair = "/Resources/YoutubeOpenGL 13 - Model Loading/models/bunny/painted_wooden_chair_01_4k.gltf";
 	
 
 
@@ -121,6 +124,7 @@ int main()
 
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("default.vert", "default.frag");
+	Shader shaderProgram2("default.vert", "default.frag");
 
 	// Store mesh data in vectors for the mesh
 	std::vector <Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
@@ -209,13 +213,22 @@ int main()
 	glm::mat4 lightModel2 = glm::mat4(1.0f);
 	lightModel2 = glm::translate(lightModel2, lightPos2);
 
-	glm::vec3 objectPos = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::mat4 objectModel = glm::mat4(1.0f);
+	glm::vec3 objectPos = glm::vec3(5.0f, 5.0f, 5.0f);
+	glm::mat4 objectModel = glm::mat4(52.0f);
 	objectModel = glm::translate(objectModel, objectPos);
 
 	glm::mat4 masaModel = glm::mat4(1.0f);
 	masaModel = glm::translate(masaModel, objectPos);
 	Model modelTable((parentDir + modelPathTable).c_str());
+
+	glm::mat4 chairModel = glm::mat4(1.0f);
+	glm::vec3 objectPosChair;
+	objectPosChair.x = 10.0f;
+	objectPosChair.y = 10.0f;
+	objectPosChair.z = 10.0f;
+
+	chairModel = glm::translate(chairModel, objectPosChair);
+	Model modelChair((parentDir + modelPathChair).c_str());
 
 	lightShader.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
@@ -227,11 +240,13 @@ int main()
 
 	shaderProgram.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(objectModel));
-	/*glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(objectModel));
-	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "modelTable"), 1, GL_FALSE, glm::value_ptr(objectModel));*/
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "modelTable"), 1, GL_FALSE, glm::value_ptr(objectModel));
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "chairModel"), 2, GL_FALSE, glm::value_ptr(chairModel));
+	glUniform3f(glGetUniformLocation(shaderProgram.ID, "objectPosChair"), objectPosChair.x, objectPosChair.y, objectPosChair.z);
 	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);	
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos2"), lightPos2.x, lightPos2.y, lightPos2.z);
+
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
@@ -255,6 +270,8 @@ int main()
 
 		// Draw a model
 		modelTable.Draw(shaderProgram, camera);
+		modelChair.Draw(shaderProgram, camera);
+
 
 		// Draws different meshes
 		floor.Draw(shaderProgram, camera);
