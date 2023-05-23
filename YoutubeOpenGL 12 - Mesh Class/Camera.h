@@ -20,6 +20,10 @@ public:
 	glm::vec3 Up = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::mat4 cameraMatrix = glm::mat4(1.0f);
 
+	//handles the changes in the lights
+	glm::vec4 dirLightColor = glm::vec4(0.9f, 0.9f, 0.9f, 0.5f);
+	bool lightSwitch = true;
+	bool lightSwitch2 = true;
 	// Prevents the camera from jumping around when first clicking left click
 	bool firstClick = true;
 
@@ -40,5 +44,7 @@ public:
 	void Matrix(Shader& shader, const char* uniform);
 	// Handles camera inputs
 	void Inputs(GLFWwindow* window);
+	//Handles the change of the lighs status
+	void updateLights(Shader& shader);
 };
 #endif

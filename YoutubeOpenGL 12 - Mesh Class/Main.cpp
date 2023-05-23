@@ -108,10 +108,7 @@ int main()
 	std::string texPath = "/Resources/YoutubeOpenGL 10 - Specular Maps/";
 	//std::string modelPathChair = "/Resources/YoutubeOpenGL 13 - Model Loading/models/bunny/outdoor_table_chair_set_01_4k.gltf";
 	std::string modelPathTable = "/Resources/YoutubeOpenGL 13 - Model Loading/models/bunny/wooden_table_02_4k.gltf";
-
-	// Load in a model
-	//Model model((parentDir + modelPathChair).c_str());
-	Model modelTable((parentDir + modelPathTable).c_str());
+	
 
 
 	// Texture data
@@ -122,11 +119,9 @@ int main()
 	
 	};
 
-
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("default.vert", "default.frag");
-	Shader shaderProgram2("default.vert", "default.frag");
-	Shader shaderProgram3("default.vert", "default.frag");
+
 	// Store mesh data in vectors for the mesh
 	std::vector <Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
 	std::vector <GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
@@ -134,19 +129,85 @@ int main()
 	// Create floor mesh
 	Mesh floor(verts, ind, tex);
 
+	// Vertices coordinates
+	Vertex wallVert1[] =
+	{ //               COORDINATES           /            COLORS          /           TexCoord         /       NORMALS         //
+		Vertex{glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
+		Vertex{glm::vec3(2.0f, 2.0f, -2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
+		Vertex{glm::vec3(2.0f, 0.0f, -2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
+		Vertex{glm::vec3(2.0f, 0.0f,  2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 0.0f)}
+	};
+
+
+	// Store mesh data in vectors for the mesh
+	std::vector <Vertex> wallVerts1(wallVert1, wallVert1 + sizeof(wallVert1) / sizeof(Vertex));
+	// Create floor mesh`
+	Mesh wall1(wallVerts1, ind, tex);
+
+	// Vertices coordinates
+	Vertex wallVert2[] =
+	{ //               COORDINATES           /            COLORS          /           TexCoord         /       NORMALS         //
+		Vertex{glm::vec3(-2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
+		Vertex{glm::vec3(-2.0f, 2.0f, -2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
+		Vertex{glm::vec3(-2.0f, 0.0f, -2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
+		Vertex{glm::vec3(-2.0f, 0.0f,  2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 0.0f)}
+	};
+
+
+	// Store mesh data in vectors for the mesh
+	std::vector <Vertex> wallVerts2(wallVert2, wallVert2 + sizeof(wallVert2) / sizeof(Vertex));
+	// Create floor mesh`
+	Mesh wall2(wallVerts2, ind, tex);
+
+	// Vertices coordinates
+	Vertex wallVert3[] =
+	{ //               COORDINATES           /            COLORS          /           TexCoord         /       NORMALS         //
+		Vertex{glm::vec3(-2.0f, 2.0f,  2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
+		Vertex{glm::vec3(-2.0f, 0.0f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
+		Vertex{glm::vec3(2.0f, 0.0f, 2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
+		Vertex{glm::vec3(2.0f, 2.0f,  2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 0.0f)}
+	};
+
+	// Store mesh data in vectors for the mesh
+	std::vector <Vertex> wallVerts3(wallVert3, wallVert3 + sizeof(wallVert3) / sizeof(Vertex));
+	// Create floor mesh`
+	Mesh wall3(wallVerts3, ind, tex);
+
+	// Vertices coordinates
+	Vertex wallVert4[] =
+	{ //               COORDINATES           /            COLORS          /           TexCoord         /       NORMALS         //
+		Vertex{glm::vec3(-2.0f, 2.0f,  -2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
+		Vertex{glm::vec3(-2.0f, 0.0f, -2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
+		Vertex{glm::vec3(2.0f, 0.0f, -2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
+		Vertex{glm::vec3(2.0f, 2.0f,  -2.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 0.0f)}
+	};
+
+
+	// Store mesh data in vectors for the mesh
+	std::vector <Vertex> wallVerts4(wallVert4, wallVert4 + sizeof(wallVert4) / sizeof(Vertex));
+	// Create floor mesh`
+	Mesh wall4(wallVerts4, ind, tex);
+
 	
 	// Shader for light cube
 	Shader lightShader("light.vert", "light.frag");
+	Shader lightShader2("light.vert", "light.frag");
 	// Store mesh data in vectors for the mesh
 	std::vector <Vertex> lightVerts(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
 	std::vector <GLuint> lightInd(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
 	// Crate light mesh
 	Mesh light(lightVerts, lightInd, tex);
+	Mesh light2(lightVerts, lightInd, tex);
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
+	glm::vec3 lightPos = glm::vec3(1.5f, 1.5f, 1.5f);
 	glm::mat4 lightModel = glm::mat4(1.0f);
 	lightModel = glm::translate(lightModel, lightPos);
+
+	glm::vec4 lightColor2 = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
+	glm::vec3 lightPos2 = glm::vec3(-1.5f, 1.5f, -1.5f);
+	glm::mat4 lightModel2 = glm::mat4(1.0f);
+	lightModel2 = glm::translate(lightModel2, lightPos2);
 
 	glm::vec3 objectPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::mat4 objectModel = glm::mat4(1.0f);
@@ -154,10 +215,15 @@ int main()
 
 	glm::mat4 masaModel = glm::mat4(1.0f);
 	masaModel = glm::translate(masaModel, objectPos);
+	Model modelTable((parentDir + modelPathTable).c_str());
 
 	lightShader.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
 	glUniform4f(glGetUniformLocation(lightShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+
+	lightShader2.Activate();
+	glUniformMatrix4fv(glGetUniformLocation(lightShader2.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel2));
+	glUniform4f(glGetUniformLocation(lightShader2.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 
 	shaderProgram.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(objectModel));
@@ -165,12 +231,7 @@ int main()
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "modelTable"), 1, GL_FALSE, glm::value_ptr(objectModel));*/
 	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);	
-	shaderProgram2.Activate();
-	glUniformMatrix4fv(glGetUniformLocation(shaderProgram2.ID, "masaModel"), 1, GL_FALSE, glm::value_ptr(masaModel));
-	/*glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(objectModel));
-	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "modelTable"), 1, GL_FALSE, glm::value_ptr(objectModel));*/
-	glUniform4f(glGetUniformLocation(shaderProgram2.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	glUniform3f(glGetUniformLocation(shaderProgram2.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos2"), lightPos2.x, lightPos2.y, lightPos2.z);
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
@@ -189,14 +250,19 @@ int main()
 		// Handles camera inputs
 		camera.Inputs(window);
 		// Updates and exports the camera matrix to the Vertex Shader
+		camera.updateLights(shaderProgram);
 		camera.updateMatrix(45.0f, 0.1f, 100.0f);
 
 		// Draw a model
-		//model.Draw(shaderProgram, camera);
-		modelTable.Draw(shaderProgram2, camera);
+		modelTable.Draw(shaderProgram, camera);
 
 		// Draws different meshes
 		floor.Draw(shaderProgram, camera);
+		wall1.Draw(shaderProgram, camera);
+		wall2.Draw(shaderProgram, camera);
+		wall3.Draw(shaderProgram, camera);
+		wall4.Draw(shaderProgram, camera);
+		light2.Draw(lightShader2, camera);
 		light.Draw(lightShader, camera);
 
 

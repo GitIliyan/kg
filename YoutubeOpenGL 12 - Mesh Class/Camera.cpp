@@ -30,11 +30,49 @@ void Camera::Matrix(Shader& shader, const char* uniform)
 	glUniformMatrix4fv(glGetUniformLocation(shader.ID, uniform), 1, GL_FALSE, glm::value_ptr(cameraMatrix));
 }
 
+bool BorderCalculation(glm::vec3 input) {
+	if (all(greaterThan(input, glm::vec3(-1.9f, 1.1f, -1.9f))) && all(lessThan(input, glm::vec3(0.9f))))
+	{
+		return true;
+	}
+	return false;
+}
 
+void Camera::updateLights(Shader& shader) {
+	// Updates the time of day
+	shader.Activate();
+	glUniform4f(glGetUniformLocation(shader.ID, "dirLightColor"), dirLightColor.x, dirLightColor.y, dirLightColor.z, dirLightColor.w);
+	glUniform1i(glGetUniformLocation(shader.ID, "lightSwitch"), lightSwitch);
+	glUniform1i(glGetUniformLocation(shader.ID, "lightSwitch2"), lightSwitch2);
+}
 
 void Camera::Inputs(GLFWwindow* window)
 {
 	// Handles key inputs
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+	{
+		std::cout << "changed to daylight" << std::endl;
+		dirLightColor = glm::vec4(0.9f, 0.9f, 0.9f, 0.5f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+	{
+		std::cout << "changed to night" << std::endl;
+		dirLightColor = glm::vec4(0.1f, 0.1f, 0.1f, 0.8f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+	{
+		std::cout << "changed to cloudy" << std::endl;
+		dirLightColor = glm::vec4(0.4f, 0.4f, 0.6f, 0.7f);
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+	{
+		lightSwitch = !lightSwitch;
+	}
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+	{
+		lightSwitch2 = !lightSwitch2;
+	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		Position += speed * Orientation;

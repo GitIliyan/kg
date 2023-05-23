@@ -21,23 +21,29 @@ uniform sampler2D specular0;
 uniform vec4 lightColor;
 // Gets the position of the light from the main function
 uniform vec3 lightPos;
+uniform vec3 lightPos2;
 // Gets the position of the camera from the main function
 uniform vec3 camPos;
+// The color for the directional light
+uniform vec4 dirLightColor;
+// The lights which need to be switched on and off
+uniform bool lightSwitch;
+uniform bool lightSwitch2;
 
 
-vec4 pointLight()
-{	
+vec4 pointLight(vec3 lightP)
+{
 	// used in two variables so I calculate it here to not have to do it twice
-	vec3 lightVec = lightPos - crntPos;
+	vec3 lightVec = lightP - crntPos;
 
 	// intensity of light with respect to distance
 	float dist = length(lightVec);
-	float a = 3.0;
-	float b = 0.7;
+	float a = 0.002;
+	float b = 0.05;
 	float inten = 1.0f / (a * dist * dist + b * dist + 1.0f);
 
 	// ambient lighting
-	float ambient = 0.20f;
+	float ambient = 0.10f;
 
 	// diffuse lighting
 	vec3 normal = normalize(Normal);
@@ -57,7 +63,7 @@ vec4 pointLight()
 vec4 direcLight()
 {
 	// ambient lighting
-	float ambient = 0.20f;
+	float ambient = 0.10f;
 
 	// diffuse lighting
 	vec3 normal = normalize(Normal);
@@ -71,21 +77,21 @@ vec4 direcLight()
 	float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 16);
 	float specular = specAmount * specularLight;
 
-	return (texture(diffuse0, texCoord) * (diffuse + ambient) + texture(specular0, texCoord).r * specular) * lightColor;
+	return (texture(diffuse0, texCoord) * (diffuse + ambient) + texture(specular0, texCoord).r * specular) * dirLightColor;
 }
 
-vec4 spotLight()
+vec4 spotLight(vec3 lightP)
 {
 	// controls how big the area that is lit up is
 	float outerCone = 0.90f;
 	float innerCone = 0.95f;
 
 	// ambient lighting
-	float ambient = 0.20f;
+	float ambient = 0.10f;
 
 	// diffuse lighting
 	vec3 normal = normalize(Normal);
-	vec3 lightDirection = normalize(lightPos - crntPos);
+	vec3 lightDirection = normalize(lightP - crntPos);
 	float diffuse = max(dot(normal, lightDirection), 0.0f);
 
 	// specular lighting
@@ -103,8 +109,12 @@ vec4 spotLight()
 }
 
 
+
 void main()
 {
-	// outputs final color
 	FragColor = direcLight();
+	
+	if(lightSwitch) {FragColor += pointLight(lightPos);}
+	
+	if(lightSwitch2) {FragColor += spotLight(lightPos2);}
 }
