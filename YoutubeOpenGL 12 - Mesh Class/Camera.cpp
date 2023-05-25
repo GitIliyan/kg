@@ -31,7 +31,7 @@ void Camera::Matrix(Shader& shader, const char* uniform)
 }
 
 bool BorderCalculation(glm::vec3 input) {
-	if (all(greaterThan(input, glm::vec3(-1.9f, 1.1f, -1.9f))) && all(lessThan(input, glm::vec3(0.9f))))
+	if (all(greaterThan(input, glm::vec3(-0.9f, 0.0f, -0.9f))) && all(lessThan(input, glm::vec3(1.9f))))
 	{
 		return true;
 	}
@@ -75,27 +75,45 @@ void Camera::Inputs(GLFWwindow* window)
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		Position += speed * Orientation;
+		if (BorderCalculation(Position + speed * Orientation))
+		{
+			Position += speed * Orientation;
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		Position += speed * -glm::normalize(glm::cross(Orientation, Up));
+		if (BorderCalculation(Position + speed * -glm::normalize(glm::cross(Orientation, Up))))
+		{
+			Position += speed * -glm::normalize(glm::cross(Orientation, Up));
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		Position += speed * -Orientation;
+		if (BorderCalculation(Position + speed * -Orientation))\
+		{
+			Position += +speed * -Orientation;
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
-		Position += speed * glm::normalize(glm::cross(Orientation, Up));
+		if (BorderCalculation(Position + speed * glm::normalize(glm::cross(Orientation, Up))))
+		{
+			Position += speed * glm::normalize(glm::cross(Orientation, Up));
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
-		Position += speed * Up;
+		if (BorderCalculation(Position + speed * Up))
+		{
+			Position += speed * Up;
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
 	{
-		Position += speed * -Up;
+		if (BorderCalculation(Position + speed * Up))
+		{
+			Position += speed * -Up;
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 	{
@@ -103,7 +121,7 @@ void Camera::Inputs(GLFWwindow* window)
 	}
 	else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
 	{
-		speed = 0.01f;
+		speed = 0.001f;
 	}
 
 

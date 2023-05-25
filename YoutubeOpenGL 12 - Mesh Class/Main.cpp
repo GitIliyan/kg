@@ -81,8 +81,8 @@ int main()
 	// So that means we only have the modern functions
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// Create a GLFWwindow object of 800 by 800 pixels, naming it "YoutubeOpenGL"
-	GLFWwindow* window = glfwCreateWindow(width, height, "YoutubeOpenGL", NULL, NULL);
+	// Create a GLFWwindow object of 800 by 800 pixels, naming it "Room"
+	GLFWwindow* window = glfwCreateWindow(width, height, "Room", NULL, NULL);
 	// Error check if the window fails to create
 	if (window == NULL)
 	{
@@ -108,9 +108,8 @@ int main()
 	*/
 	std::string parentDir = (fs::current_path().fs::path::parent_path()).string();
 	std::string texPath = "/Resources/YoutubeOpenGL 10 - Specular Maps/";
-	//std::string modelPathChair = "/Resources/YoutubeOpenGL 13 - Model Loading/models/bunny/outdoor_table_chair_set_01_4k.gltf";
-	std::string modelPathTable = "/Resources/YoutubeOpenGL 13 - Model Loading/models/bunny/wooden_table_02_4k.gltf";
-	std::string modelPathChair = "/Resources/YoutubeOpenGL 13 - Model Loading/models/bunny/painted_wooden_chair_01_4k.gltf";
+	std::string modelPathTable = "/Resources/YoutubeOpenGL 13 - Model Loading/models/wooden_table_02_4k.gltf";
+	std::string modelPathChair = "/Resources/YoutubeOpenGL 13 - Model Loading/models/painted_wooden_chair_01_4k.gltf";
 	
 
 
@@ -222,10 +221,8 @@ int main()
 	Model modelTable((parentDir + modelPathTable).c_str());
 
 	glm::mat4 chairModel = glm::mat4(1.0f);
-	glm::vec3 objectPosChair;
-	objectPosChair.x = 10.0f;
-	objectPosChair.y = 10.0f;
-	objectPosChair.z = 10.0f;
+	glm::vec3 objectPosChair = glm::vec3(10.0f, 10.0f, 10.0f);
+
 
 	chairModel = glm::translate(chairModel, objectPosChair);
 	Model modelChair((parentDir + modelPathChair).c_str());
@@ -240,13 +237,11 @@ int main()
 
 	shaderProgram.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(objectModel));
-	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "modelTable"), 1, GL_FALSE, glm::value_ptr(objectModel));
-	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "chairModel"), 2, GL_FALSE, glm::value_ptr(chairModel));
-	glUniform3f(glGetUniformLocation(shaderProgram.ID, "objectPosChair"), objectPosChair.x, objectPosChair.y, objectPosChair.z);
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "modelTable"), 2, GL_FALSE, glm::value_ptr(objectModel));
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "modelChair"), 3, GL_FALSE, glm::value_ptr(chairModel));
 	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);	
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos2"), lightPos2.x, lightPos2.y, lightPos2.z);
-
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
